@@ -2,19 +2,24 @@ import React, { Component } from 'react';
 
 class App extends Component {
     state = {
-        posts: []
+        posts: [],
+        isDev:"???"
     };
 
     async componentDidMount() {
         try {
-            //for production.
-            const res = await fetch('http://132.226.231.47:8000/api/');
-            //for debug.
-            //const res = await fetch('http://127.0.0.1:8000/api/');
+            var api = ""
+            if (process.env.NODE_ENV === "development") {
+                api = "http://127.0.0.1:8000/api/"
+            } else {
+                api = "http://132.226.231.47:8000/api/"
+            }
+            const res = await fetch(api);
             const posts = await res.json();
             this.setState({
                 posts
-            });
+            })
+
         } catch (e) {
             console.log(e);
         }
@@ -29,6 +34,7 @@ class App extends Component {
                         <span>{item.content}</span>
                     </div>
                 ))}
+                <span>{process.env.NODE_ENV}</span>
             </div>
         );
     }
