@@ -3,11 +3,23 @@ import { useForm } from "react-hook-form";
 import { debug } from "./module/debug.js";
 
 import axios from "axios";
+import Cookies from 'js-cookie';
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.headers.common['X-CSRFToken'] = Cookies.get("csrftoken");
+axios.defaults.withCredentials = true;
+
 
 // login, logout function sample.
 async function PostLogin(username, password)
 {
-    const response = await axios.post("http://127.0.0.1:8000/api_auth/login/", {username, password});
+    // const response = await axios.post("http://127.0.0.1:8000/api_auth/login/", {username, password});
+    // debug(Cookies.get('csrftoken'));
+    const response = await axios.post("http://127.0.0.1:8000/api_auth/login/", 
+    {
+        username, password
+    });
     return response.data.token;
 }
 
@@ -29,7 +41,7 @@ export default function Login() {
             token: token,
             isLogin: true
         }); 
-        debug(state);
+        // debug(state);
     }
 
     function LogOut()
@@ -45,6 +57,8 @@ export default function Login() {
                 token : {state.token}
             </div>);
     }
+
+    debug("hello, world!");
 
     return (
     <div>
